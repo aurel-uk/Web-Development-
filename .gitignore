@@ -1,0 +1,37 @@
+# ============================================
+# GIT IGNORE
+# ============================================
+
+# Environment files (secrets)
+.env
+.env.local
+.env.production
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+
+# Logs
+logs/*.log
+*.log
+
+# Uploads (user-generated content)
+assets/images/uploads/*
+!assets/images/uploads/.gitkeep
+
+# Vendor dependencies (if using Composer)
+vendor/
+
+# Node modules (if using npm)
+node_modules/
+
+# Cache
+*.cache
+.phpunit.cache/
+
+# Temporary files
+*.tmp
+*.temp
