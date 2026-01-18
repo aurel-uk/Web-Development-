@@ -8,7 +8,10 @@
       "Bash(curl:*)",
       "Bash(docker-compose down:*)",
       "Bash(docker-compose up:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nfeat: Add complete PHP e-commerce platform with Docker support\n\n- Add authentication system \\(login, register, logout, password reset\\)\n- Add product catalog with categories and filtering\n- Add shopping cart functionality with AJAX updates\n- Add checkout process with order management\n- Add user profile and order history pages\n- Add admin panel for managing users, products, and orders\n- Add contact form with message handling\n- Configure Docker \\(PHP 8.2 + Apache, MySQL 8.0, phpMyAdmin\\)\n- Fix JavaScript placement \\(move scripts after footer with DOMContentLoaded\\)\n- Add proper CSRF protection on all forms\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(git push:*)",
+      "Bash(gh:*)"
     ]
   }
 }
