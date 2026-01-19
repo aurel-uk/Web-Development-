@@ -153,6 +153,42 @@ require_once __DIR__ . '/../includes/header.php';
                         </div>
                     </div>
 
+                    <!-- Two-Factor Authentication -->
+                    <div class="card mt-4">
+                        <div class="card-header">
+                            <h5 class="mb-0"><i class="bi bi-shield-check me-2"></i>Verifikimi me Dy Hapa (2FA)</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="mb-1">Autentikimi me Email</h6>
+                                    <p class="text-muted mb-0 small">
+                                        Kur aktivizohet, do t'ju dërgohet një kod 6-shifror në email çdo herë që hyni.
+                                    </p>
+                                </div>
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" role="switch"
+                                           id="twoFactorToggle" style="width: 3em; height: 1.5em;"
+                                           <?= (isset($user['two_factor_enabled']) && $user['two_factor_enabled']) ? 'checked' : '' ?>>
+                                </div>
+                            </div>
+
+                            <div id="2fa-status" class="mt-3">
+                                <?php if (isset($user['two_factor_enabled']) && $user['two_factor_enabled']): ?>
+                                    <div class="alert alert-success mb-0">
+                                        <i class="bi bi-check-circle me-2"></i>
+                                        <strong>2FA është aktivizuar.</strong> Llogaria juaj ka mbrojtje shtesë.
+                                    </div>
+                                <?php else: ?>
+                                    <div class="alert alert-warning mb-0">
+                                        <i class="bi bi-exclamation-triangle me-2"></i>
+                                        <strong>2FA nuk është aktivizuar.</strong> Rekomandojmë ta aktivizoni për siguri më të lartë.
+                                    </div>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Activity Log -->
                     <div class="card mt-4">
                         <div class="card-header">
@@ -269,6 +305,58 @@ document.addEventListener('DOMContentLoaded', function() {
             } catch (error) {
                 console.error('Error:', error);
                 if (typeof AppUtils !== 'undefined') AppUtils.showToast('error', 'Gabim në komunikim me serverin.');
+            }
+        });
+    }
+
+    // Two-Factor Authentication Toggle
+    const twoFactorToggle = document.getElementById('twoFactorToggle');
+    if (twoFactorToggle) {
+        twoFactorToggle.addEventListener('change', async function() {
+            const enabled = this.checked;
+            const statusDiv = document.getElementById('2fa-status');
+
+            try {
+                const formData = new FormData();
+                formData.append('csrf_token', document.querySelector('[name="csrf_token"]').value);
+                formData.append('action', 'toggle_2fa');
+                formData.append('enabled', enabled ? '1' : '0');
+
+                const response = await fetch('<?= SITE_URL ?>/api/profile.php', {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await response.json();
+
+                if (data.success) {
+                    if (typeof AppUtils !== 'undefined') AppUtils.showToast('success', data.message);
+
+                    // Përditëso statusin
+                    if (enabled) {
+                        statusDiv.innerHTML = `
+                            <div class="alert alert-success mb-0">
+                                <i class="bi bi-check-circle me-2"></i>
+                                <strong>2FA është aktivizuar.</strong> Llogaria juaj ka mbrojtje shtesë.
+                            </div>
+                        `;
+                    } else {
+                        statusDiv.innerHTML = `
+                            <div class="alert alert-warning mb-0">
+                                <i class="bi bi-exclamation-triangle me-2"></i>
+                                <strong>2FA nuk është aktivizuar.</strong> Rekomandojmë ta aktivizoni për siguri më të lartë.
+                            </div>
+                        `;
+                    }
+                } else {
+                    if (typeof AppUtils !== 'undefined') AppUtils.showToast('error', data.message);
+                    // Kthe toggle në gjendjen e mëparshme
+                    this.checked = !enabled;
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                if (typeof AppUtils !== 'undefined') AppUtils.showToast('error', 'Gabim në komunikim me serverin.');
+                // Kthe toggle në gjendjen e mëparshme
+                this.checked = !enabled;
             }
         });
     }

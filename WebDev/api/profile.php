@@ -132,6 +132,24 @@ switch ($action) {
         echo json_encode(['success' => true, 'message' => 'Fjalëkalimi u ndryshua me sukses.']);
         break;
 
+    case 'toggle_2fa':
+        $enabled = ($_POST['enabled'] ?? '0') === '1';
+
+        // Përditëso statusin e 2FA
+        $db->update('users', ['two_factor_enabled' => $enabled ? 1 : 0], 'id = ?', [$userId]);
+
+        // Logo veprimin
+        $action = $enabled ? '2fa_enabled' : '2fa_disabled';
+        $description = $enabled ? 'Verifikimi me dy hapa u aktivizua' : 'Verifikimi me dy hapa u çaktivizua';
+        logUserAction($userId, $action, $description);
+
+        $message = $enabled
+            ? 'Verifikimi me dy hapa u aktivizua me sukses.'
+            : 'Verifikimi me dy hapa u çaktivizua.';
+
+        echo json_encode(['success' => true, 'message' => $message]);
+        break;
+
     default:
         echo json_encode(['success' => false, 'message' => 'Veprim i pavlefshëm.']);
 }

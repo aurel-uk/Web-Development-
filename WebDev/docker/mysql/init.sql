@@ -34,6 +34,7 @@ CREATE TABLE IF NOT EXISTS users (
     phone VARCHAR(20),
     role_id INT DEFAULT 1,
     email_verified BOOLEAN DEFAULT FALSE,
+    two_factor_enabled BOOLEAN DEFAULT TRUE,
     is_active BOOLEAN DEFAULT TRUE,
     avatar VARCHAR(255) DEFAULT 'default.png',
     last_login TIMESTAMP NULL,
@@ -204,6 +205,22 @@ CREATE TABLE IF NOT EXISTS order_items (
     FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE,
     FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
 ) ENGINE=InnoDB;
+
+-- ============================================
+-- TABELA: TWO-FACTOR AUTHENTICATION (2FA)
+-- ============================================
+CREATE TABLE IF NOT EXISTS two_factor_codes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    code VARCHAR(6) NOT NULL,
+    expires_at TIMESTAMP NOT NULL,
+    is_used BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+CREATE INDEX idx_2fa_user ON two_factor_codes(user_id);
+CREATE INDEX idx_2fa_code ON two_factor_codes(code);
 
 -- ============================================
 -- TABELA: MESAZHET E KONTAKTIT
