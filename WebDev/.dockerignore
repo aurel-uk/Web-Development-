@@ -1,0 +1,33 @@
+# Git
+.git
+.gitignore
+
+# IDE
+.vscode
+.idea
+*.sublime-*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+logs/*.log
+*.log
+
+# Temporary files
+*.tmp
+*.temp
+
+# Node modules (nëse përdoret)
+node_modules
+
+# Vendor (nëse përdoret Composer)
+vendor
+
+# Environment files lokale
+.env.local
+.env.*.local
+
+# Docker volumes
+mysql_data

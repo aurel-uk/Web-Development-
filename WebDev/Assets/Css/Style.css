@@ -1,0 +1,1053 @@
+/**
+
+ * STILET E PLATFORMËS
+
+ * ==================
+
+ * Ky skedar përmban stilet custom të aplikacionit.
+
+ * Bootstrap përdoret si bazë, këtu shtohen personalizimet.
+
+ */
+
+ 
+
+/* ============================================
+
+   VARIABLAT CSS (Custom Properties)
+
+   ============================================ */
+
+:root {
+
+    /* Ngjyrat kryesore */
+
+    --primary-color: #0d6efd;
+
+    --secondary-color: #6c757d;
+
+    --success-color: #198754;
+
+    --danger-color: #dc3545;
+
+    --warning-color: #ffc107;
+
+    --info-color: #0dcaf0;
+
+ 
+
+    /* Ngjyrat e background */
+
+    --bg-light: #f8f9fa;
+
+    --bg-dark: #212529;
+
+ 
+
+    /* Hijet */
+
+    --shadow-sm: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+
+    --shadow-md: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+
+    --shadow-lg: 0 1rem 3rem rgba(0, 0, 0, 0.175);
+
+ 
+
+    /* Border radius */
+
+    --radius-sm: 0.25rem;
+
+    --radius-md: 0.5rem;
+
+    --radius-lg: 1rem;
+
+ 
+
+    /* Transitions */
+
+    --transition-fast: 0.15s ease;
+
+    --transition-normal: 0.3s ease;
+
+}
+
+ 
+
+/* ============================================
+
+   STILET GLOBALE
+
+   ============================================ */
+
+body {
+
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+    background-color: var(--bg-light);
+
+    min-height: 100vh;
+
+    display: flex;
+
+    flex-direction: column;
+
+}
+
+ 
+
+main {
+
+    flex: 1;
+
+}
+
+ 
+
+/* Selektimi i tekstit */
+
+::selection {
+
+    background-color: var(--primary-color);
+
+    color: white;
+
+}
+
+ 
+
+/* Scrollbar custom */
+
+::-webkit-scrollbar {
+
+    width: 8px;
+
+}
+
+ 
+
+::-webkit-scrollbar-track {
+
+    background: #f1f1f1;
+
+}
+
+ 
+
+::-webkit-scrollbar-thumb {
+
+    background: var(--secondary-color);
+
+    border-radius: 4px;
+
+}
+
+ 
+
+::-webkit-scrollbar-thumb:hover {
+
+    background: var(--primary-color);
+
+}
+
+ 
+
+/* ============================================
+
+   NAVBAR
+
+   ============================================ */
+
+.navbar {
+
+    box-shadow: var(--shadow-sm);
+
+}
+
+ 
+
+.navbar-brand {
+
+    font-size: 1.4rem;
+
+}
+
+ 
+
+.nav-link {
+
+    transition: var(--transition-fast);
+
+}
+
+ 
+
+.nav-link:hover {
+
+    transform: translateY(-2px);
+
+}
+
+ 
+
+/* Badge në cart icon */
+
+.nav-link .badge {
+
+    position: relative;
+
+    top: -8px;
+
+    left: -5px;
+
+    font-size: 0.65rem;
+
+}
+
+ 
+
+/* ============================================
+
+   BUTTONS
+
+   ============================================ */
+
+.btn {
+
+    transition: var(--transition-normal);
+
+}
+
+ 
+
+.btn:hover {
+
+    transform: translateY(-2px);
+
+    box-shadow: var(--shadow-sm);
+
+}
+
+ 
+
+.btn:active {
+
+    transform: translateY(0);
+
+}
+
+ 
+
+/* Button Floating (Back to Top) */
+
+.btn-floating {
+
+    position: fixed;
+
+    bottom: 30px;
+
+    right: 30px;
+
+    width: 50px;
+
+    height: 50px;
+
+    border-radius: 50%;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    box-shadow: var(--shadow-md);
+
+    z-index: 1000;
+
+    opacity: 0;
+
+    visibility: hidden;
+
+    transition: var(--transition-normal);
+
+}
+
+ 
+
+.btn-floating.show {
+
+    opacity: 1;
+
+    visibility: visible;
+
+}
+
+ 
+
+/* ============================================
+
+   FORMS
+
+   ============================================ */
+
+.form-control,
+
+.form-select {
+
+    border-radius: var(--radius-md);
+
+    transition: var(--transition-fast);
+
+}
+
+ 
+
+.form-control:focus,
+
+.form-select:focus {
+
+    border-color: var(--primary-color);
+
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.15);
+
+}
+
+ 
+
+/* Input Groups */
+
+.input-group-text {
+
+    background-color: var(--bg-light);
+
+}
+
+ 
+
+/* Form Labels */
+
+.form-label {
+
+    font-weight: 500;
+
+    color: var(--secondary-color);
+
+}
+
+ 
+
+/* Password Strength Indicator */
+
+.password-strength {
+
+    height: 4px;
+
+    background-color: #e9ecef;
+
+    border-radius: 2px;
+
+    margin-top: 0.5rem;
+
+    overflow: hidden;
+
+}
+
+ 
+
+.password-strength-bar {
+
+    height: 100%;
+
+    width: 0;
+
+    transition: var(--transition-normal);
+
+}
+
+ 
+
+.password-strength-bar.weak { width: 33%; background-color: var(--danger-color); }
+
+.password-strength-bar.medium { width: 66%; background-color: var(--warning-color); }
+
+.password-strength-bar.strong { width: 100%; background-color: var(--success-color); }
+
+ 
+
+/* ============================================
+
+   CARDS
+
+   ============================================ */
+
+.card {
+
+    border: none;
+
+    border-radius: var(--radius-lg);
+
+    box-shadow: var(--shadow-sm);
+
+    transition: var(--transition-normal);
+
+}
+
+ 
+
+.card:hover {
+
+    box-shadow: var(--shadow-md);
+
+}
+
+ 
+
+/* Auth Cards (Login, Register) */
+
+.auth-card {
+
+    max-width: 450px;
+
+    margin: 2rem auto;
+
+}
+
+ 
+
+.auth-card .card-header {
+
+    background: linear-gradient(135deg, var(--primary-color), #0056b3);
+
+    color: white;
+
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0 !important;
+
+    padding: 1.5rem;
+
+}
+
+ 
+
+/* Product Cards */
+
+.product-card {
+
+    position: relative;
+
+    overflow: hidden;
+
+}
+
+ 
+
+.product-card .card-img-top {
+
+    height: 200px;
+
+    object-fit: cover;
+
+    transition: var(--transition-normal);
+
+}
+
+ 
+
+.product-card:hover .card-img-top {
+
+    transform: scale(1.05);
+
+}
+
+ 
+
+.product-card .badge-sale {
+
+    position: absolute;
+
+    top: 10px;
+
+    left: 10px;
+
+    z-index: 1;
+
+}
+
+ 
+
+.product-card .price {
+
+    font-size: 1.25rem;
+
+    font-weight: 700;
+
+    color: var(--primary-color);
+
+}
+
+ 
+
+.product-card .old-price {
+
+    text-decoration: line-through;
+
+    color: var(--secondary-color);
+
+    font-size: 0.9rem;
+
+}
+
+ 
+
+/* ============================================
+
+   TABLES
+
+   ============================================ */
+
+.table-responsive {
+
+    border-radius: var(--radius-md);
+
+    box-shadow: var(--shadow-sm);
+
+}
+
+ 
+
+.table {
+
+    margin-bottom: 0;
+
+}
+
+ 
+
+.table thead {
+
+    background-color: var(--bg-light);
+
+}
+
+ 
+
+.table th {
+
+    font-weight: 600;
+
+    text-transform: uppercase;
+
+    font-size: 0.85rem;
+
+    letter-spacing: 0.5px;
+
+}
+
+ 
+
+/* ============================================
+
+   DASHBOARD
+
+   ============================================ */
+
+/* Stats Cards */
+
+.stat-card {
+
+    border-left: 4px solid var(--primary-color);
+
+    transition: var(--transition-normal);
+
+}
+
+ 
+
+.stat-card:hover {
+
+    transform: translateX(5px);
+
+}
+
+ 
+
+.stat-card.success { border-left-color: var(--success-color); }
+
+.stat-card.warning { border-left-color: var(--warning-color); }
+
+.stat-card.danger { border-left-color: var(--danger-color); }
+
+.stat-card.info { border-left-color: var(--info-color); }
+
+ 
+
+.stat-card .stat-icon {
+
+    width: 60px;
+
+    height: 60px;
+
+    border-radius: 50%;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    font-size: 1.5rem;
+
+}
+
+ 
+
+.stat-card .stat-number {
+
+    font-size: 2rem;
+
+    font-weight: 700;
+
+}
+
+ 
+
+/* Sidebar */
+
+.sidebar {
+
+    min-height: calc(100vh - 56px);
+
+    background-color: var(--bg-dark);
+
+    padding-top: 1rem;
+
+}
+
+ 
+
+.sidebar .nav-link {
+
+    color: rgba(255, 255, 255, 0.8);
+
+    padding: 0.75rem 1rem;
+
+    border-radius: var(--radius-md);
+
+    margin: 0.25rem 0.5rem;
+
+}
+
+ 
+
+.sidebar .nav-link:hover,
+
+.sidebar .nav-link.active {
+
+    background-color: var(--primary-color);
+
+    color: white;
+
+}
+
+ 
+
+.sidebar .nav-link i {
+
+    width: 24px;
+
+}
+
+ 
+
+/* ============================================
+
+   PROFILE
+
+   ============================================ */
+
+.profile-header {
+
+    background: linear-gradient(135deg, var(--primary-color), #0056b3);
+
+    color: white;
+
+    padding: 3rem 0;
+
+    margin-top: -1rem;
+
+}
+
+ 
+
+.profile-avatar {
+
+    width: 150px;
+
+    height: 150px;
+
+    border-radius: 50%;
+
+    border: 5px solid white;
+
+    object-fit: cover;
+
+    box-shadow: var(--shadow-lg);
+
+}
+
+ 
+
+.profile-avatar-upload {
+
+    position: relative;
+
+    display: inline-block;
+
+}
+
+ 
+
+.profile-avatar-upload .upload-btn {
+
+    position: absolute;
+
+    bottom: 10px;
+
+    right: 10px;
+
+    width: 40px;
+
+    height: 40px;
+
+    border-radius: 50%;
+
+    background-color: white;
+
+    border: none;
+
+    box-shadow: var(--shadow-sm);
+
+    cursor: pointer;
+
+    transition: var(--transition-fast);
+
+}
+
+ 
+
+.profile-avatar-upload .upload-btn:hover {
+
+    background-color: var(--primary-color);
+
+    color: white;
+
+}
+
+ 
+
+/* ============================================
+
+   ALERTS
+
+   ============================================ */
+
+.alert {
+
+    border: none;
+
+    border-radius: var(--radius-md);
+
+    border-left: 4px solid;
+
+}
+
+ 
+
+.alert-success { border-left-color: var(--success-color); }
+
+.alert-danger { border-left-color: var(--danger-color); }
+
+.alert-warning { border-left-color: var(--warning-color); }
+
+.alert-info { border-left-color: var(--info-color); }
+
+ 
+
+/* ============================================
+
+   PAGINATION
+
+   ============================================ */
+
+.pagination {
+
+    gap: 0.25rem;
+
+}
+
+ 
+
+.page-link {
+
+    border-radius: var(--radius-md) !important;
+
+    border: none;
+
+    margin: 0 2px;
+
+}
+
+ 
+
+/* ============================================
+
+   LOADING SPINNER
+
+   ============================================ */
+
+.spinner-overlay {
+
+    position: fixed;
+
+    top: 0;
+
+    left: 0;
+
+    width: 100%;
+
+    height: 100%;
+
+    background-color: rgba(255, 255, 255, 0.8);
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    z-index: 9999;
+
+}
+
+ 
+
+/* ============================================
+
+   SHOPPING CART
+
+   ============================================ */
+
+.cart-item {
+
+    padding: 1rem;
+
+    border-bottom: 1px solid #e9ecef;
+
+}
+
+ 
+
+.cart-item:last-child {
+
+    border-bottom: none;
+
+}
+
+ 
+
+.cart-item-image {
+
+    width: 80px;
+
+    height: 80px;
+
+    object-fit: cover;
+
+    border-radius: var(--radius-md);
+
+}
+
+ 
+
+.cart-quantity {
+
+    width: 60px;
+
+    text-align: center;
+
+}
+
+ 
+
+/* ============================================
+
+   FOOTER
+
+   ============================================ */
+
+footer {
+
+    margin-top: auto;
+
+}
+
+ 
+
+footer a {
+
+    transition: var(--transition-fast);
+
+}
+
+ 
+
+footer a:hover {
+
+    color: var(--primary-color) !important;
+
+}
+
+ 
+
+/* ============================================
+
+   RESPONSIVE
+
+   ============================================ */
+
+@media (max-width: 768px) {
+
+    .auth-card {
+
+        margin: 1rem;
+
+    }
+
+ 
+
+    .profile-header {
+
+        text-align: center;
+
+    }
+
+ 
+
+    .profile-avatar {
+
+        width: 100px;
+
+        height: 100px;
+
+    }
+
+ 
+
+    .stat-card .stat-number {
+
+        font-size: 1.5rem;
+
+    }
+
+ 
+
+    .sidebar {
+
+        min-height: auto;
+
+    }
+
+}
+
+ 
+
+/* ============================================
+
+   ANIMATIONS
+
+   ============================================ */
+
+@keyframes fadeIn {
+
+    from { opacity: 0; transform: translateY(20px); }
+
+    to { opacity: 1; transform: translateY(0); }
+
+}
+
+ 
+
+.fade-in {
+
+    animation: fadeIn 0.5s ease forwards;
+
+}
+
+ 
+
+@keyframes pulse {
+
+    0%, 100% { transform: scale(1); }
+
+    50% { transform: scale(1.05); }
+
+}
+
+ 
+
+.pulse {
+
+    animation: pulse 2s infinite;
+
+}
+
+ 
+
+/* ============================================
+
+   UTILITIES
+
+   ============================================ */
+
+.text-gradient {
+
+    background: linear-gradient(135deg, var(--primary-color), #0056b3);
+
+    -webkit-background-clip: text;
+
+    -webkit-text-fill-color: transparent;
+
+    background-clip: text;
+
+}
+
+ 
+
+.bg-gradient-primary {
+
+    background: linear-gradient(135deg, var(--primary-color), #0056b3);
+
+}
+
+ 
+
+.border-dashed {
+
+    border-style: dashed !important;
+
+}
+
+ 
+
+.cursor-pointer {
+
+    cursor: pointer;
+
+}
+
+ 
+
+.min-vh-75 {
+
+    min-height: 75vh;
+
+}
