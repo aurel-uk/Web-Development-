@@ -6,10 +6,10 @@
  */
 
 // Merr konfigurimet nga environment variables (Docker) ose përdor default
-define('DB_HOST', getenv('DB_HOST') ?: 'localhost');
+define('DB_HOST', getenv('DB_HOST') ?: 'db');
 define('DB_NAME', getenv('DB_NAME') ?: 'web_platform');
-define('DB_USER', getenv('DB_USER') ?: 'root');
-define('DB_PASS', getenv('DB_PASS') ?: '');
+define('DB_USER', getenv('DB_USER') ?: 'webuser');
+define('DB_PASS', getenv('DB_PASS') ?: 'webpass123');
 define('DB_CHARSET', 'utf8mb4');
 
 /**
