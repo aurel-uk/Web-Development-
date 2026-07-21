@@ -14,7 +14,7 @@ $message = '';
 if (!empty($token)) {
     $db = Database::getInstance();
 
-    // Gjej tokenin
+    // Gjej tokenin duke e krahasuar të gjitha rreshtat në tabelë
     $verification = $db->fetchOne(
         "SELECT * FROM email_verifications WHERE token = ? AND expires_at > NOW()",
         [hash('sha256', $token)]
