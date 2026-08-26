@@ -21,7 +21,19 @@ define('SITE_NAME', 'Web Platform');
 if ($envUrl = getenv('APP_URL')) {
     define('SITE_URL', rtrim($envUrl, '/'));
 } elseif (!empty($_SERVER['HTTP_HOST'])) {
-    $scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+    // Prapa një proxy/tunnel (ngrok, Codespaces, nginx/Traefik, etj.) që bën TLS
+    // termination, PHP e sheh kërkesën si HTTP edhe kur shfletuesi është në HTTPS —
+    // atëherë X-Forwarded-Proto tregon protokollin e vërtetë. Pa këtë, SITE_URL dilte
+    // 'http://' ndërsa faqja ishte 'https://', dhe fetch() bllokohej si "mixed content"
+    // (butoni "spin"-te por asgjë nuk ndodhte, pa gabim të dukshëm).
+    $forwardedProto = strtolower(trim(explode(',', $_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '')[0]));
+    if ($forwardedProto === 'https' || $forwardedProto === 'http') {
+        $scheme = $forwardedProto;
+    } elseif ((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || ($_SERVER['SERVER_PORT'] ?? null) == 443) {
+        $scheme = 'https';
+    } else {
+        $scheme = 'http';
+    }
     define('SITE_URL', $scheme . '://' . $_SERVER['HTTP_HOST']);
 } else {
     define('SITE_URL', 'http://localhost:8080');
