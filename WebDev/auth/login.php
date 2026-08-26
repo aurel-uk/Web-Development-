@@ -148,7 +148,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         try {
             const formData = new FormData(form);
-            const response = await fetch('<?= SITE_URL ?>/api/login.php', {
+            const response = await fetch('/api/login.php', {
                 method: 'POST',
                 body: formData
             });
@@ -162,7 +162,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 // Ridrejto
                 setTimeout(function() {
-                    window.location.href = data.redirect || '<?= SITE_URL ?>';
+                    window.location.href = data.redirect || '/';
                 }, 1000);
             } else {
                 alertBox.className = 'alert alert-danger';
