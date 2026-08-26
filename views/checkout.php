@@ -5,6 +5,8 @@
  * Procesimi i porosisë dhe pagesës.
  */
 
+require_once __DIR__ . '/../includes/init.php';
+
 $pageTitle = 'Checkout - ' . SITE_NAME;
 require_once __DIR__ . '/partials/header.php';
 

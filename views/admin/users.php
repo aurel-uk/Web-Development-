@@ -6,6 +6,8 @@
  * dhe të ndryshojë rolet e tyre.
  */
 
+require_once __DIR__ . '/../../includes/init.php';
+
 $pageTitle = 'Menaxho Përdoruesit - ' . SITE_NAME;
 require_once __DIR__ . '/../partials/header.php';
 

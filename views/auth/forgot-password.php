@@ -5,6 +5,8 @@
  * Përdoruesi kërkon link për të rivendosur fjalëkalimin.
  */
 
+require_once __DIR__ . '/../../includes/init.php';
+
 $pageTitle = 'Rivendos Fjalëkalimin - ' . SITE_NAME;
 require_once __DIR__ . '/../partials/header.php';
 

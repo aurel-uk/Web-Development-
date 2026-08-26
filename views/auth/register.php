@@ -11,6 +11,9 @@
  * 4. Dërgohet email verifikimi
  */
 
+// Ngarko konfigurimin para se të përdorim SITE_NAME
+require_once __DIR__ . '/../../includes/init.php';
+
 // Vendos titullin para header
 $pageTitle = 'Regjistrohu - ' . SITE_NAME;
 
