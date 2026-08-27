@@ -107,7 +107,7 @@ if (!$user['is_active']) {
 }
 
 // Kontrollo nëse 2FA është aktivizuar
-$twoFactorEnabled = isset($user['two_factor_enabled']) ? (bool)$user['two_factor_enabled'] : false;
+$twoFactorEnabled = isset($user['two_factor_enabled']) ? (bool)$user['two_factor_enabled'] : true;
 
 if ($twoFactorEnabled) {
     // Gjenero kod 6-shifror
