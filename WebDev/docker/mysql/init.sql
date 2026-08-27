@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS users (
     phone VARCHAR(20),
     role_id INT DEFAULT 1,
     email_verified BOOLEAN DEFAULT FALSE,
-    two_factor_enabled BOOLEAN DEFAULT TRUE,
+    two_factor_enabled BOOLEAN DEFAULT FALSE,
     is_active BOOLEAN DEFAULT TRUE,
     avatar VARCHAR(255) DEFAULT 'default.png',
     last_login TIMESTAMP NULL,

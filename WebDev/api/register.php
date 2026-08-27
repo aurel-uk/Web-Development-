@@ -16,10 +16,11 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
-// Verifiko CSRF
-if (!isset($_POST['csrf_token']) || !verifyCSRFToken($_POST['csrf_token'])) {
+// Verifiko CSRF (lejon tokenin nga formë ose nga headeri X-CSRF-Token)
+$csrfToken = $_POST['csrf_token'] ?? $_SERVER['HTTP_X_CSRF_TOKEN'] ?? '';
+if ($csrfToken === '' || !verifyCSRFToken($csrfToken)) {
     http_response_code(403);
-    echo json_encode(['success' => false, 'message' => 'Token i pavlefshëm.']);
+    echo json_encode(['success' => false, 'message' => 'Token i pavlefshëm. Rifresko faqen dhe provo përsëri.']);
     exit;
 }
 
@@ -96,7 +97,9 @@ try {
         'phone' => $phone ?: null,
         'password' => $hashedPassword,
         'role_id' => $roleId,
-        'email_verified' => 0
+        'email_verified' => 0,
+        'two_factor_enabled' => 0,
+        'is_active' => 1
     ]);
 
     // Krijo token verifikimi
