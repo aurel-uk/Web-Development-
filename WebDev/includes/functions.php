@@ -112,7 +112,7 @@ function checkSessionTimeout(): void
 
                 session_destroy();
 
-                redirect('views/auth/login.php?timeout=1');
+                redirect('auth/login.php?timeout=1');
 
             }
 
