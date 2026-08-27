@@ -33,7 +33,7 @@ require_once __DIR__ . '/includes/header.php';
                         <a href="<?= SITE_URL ?>/pages/products.php" class="btn btn-light btn-lg">
                             <i class="bi bi-box me-2"></i>Shiko Produktet
                         </a>
-                        <a href="<?= SITE_URL ?>/pages/dashboard.php" class="btn btn-outline-light btn-lg">
+                        <a href="<?= SITE_URL ?><?= isAdmin() ? '/views/admin/dashboard.php' : '/views/user/dashboard.php' ?>" class="btn btn-outline-light btn-lg">
                             <i class="bi bi-grid me-2"></i>Dashboard
                         </a>
                     <?php endif; ?>

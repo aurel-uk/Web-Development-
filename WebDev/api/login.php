@@ -107,7 +107,7 @@ if (!$user['is_active']) {
 }
 
 // Kontrollo nëse 2FA është aktivizuar
-$twoFactorEnabled = isset($user['two_factor_enabled']) ? (bool)$user['two_factor_enabled'] : true;
+$twoFactorEnabled = isset($user['two_factor_enabled']) ? (bool)$user['two_factor_enabled'] : false;
 
 if ($twoFactorEnabled) {
     // Gjenero kod 6-shifror
@@ -120,7 +120,7 @@ if ($twoFactorEnabled) {
     $db->insert('two_factor_codes', [
         'user_id' => $user['id'],
         'code' => $code,
-        'expires_at' => date('Y-m-d H:i:s', time() + 600) // 10 minuta
+        'expires_at' => date('Y-m-d H:i:s', time() + 600)
     ]);
 
     // Ruaj të dhënat e përkohshme në sesion

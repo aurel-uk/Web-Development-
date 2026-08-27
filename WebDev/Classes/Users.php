@@ -77,15 +77,20 @@ class User
             // password_hash përdor algoritmin bcrypt që është shumë i sigurt
             $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
+            // Merr rolin default (user)
+            $userRole = $this->db->fetchOne("SELECT id FROM roles WHERE name = 'user'");
+            $roleId = $userRole ? $userRole['id'] : 2;
+
             // Shto në databazë
             $userId = $this->db->insert('users', [
                 'first_name' => $firstName,
                 'last_name' => $lastName,
                 'email' => $email,
                 'password' => $hashedPassword,
-                'role_id' => 1,  // Default: user
-                'is_verified' => false,
-                'is_active' => true
+                'role_id' => $roleId,
+                'email_verified' => 0,
+                'two_factor_enabled' => 0,
+                'is_active' => 1
             ]);
 
             // Krijo dhe dërgo kodin e verifikimit
@@ -126,21 +131,20 @@ class User
      */
     public function sendVerificationEmail(int $userId, string $email): bool
     {
-        // Gjenero kod unik
-        $code = bin2hex(random_bytes(32));
+        // Gjenero token unik
+        $token = bin2hex(random_bytes(32));
 
         // Ruaje në databazë (skadon pas 24 orësh)
-        $this->db->insert('verification_codes', [
+        $this->db->insert('email_verifications', [
             'user_id' => $userId,
-            'code' => $code,
-            'type' => 'email_verify',
+            'token' => hash('sha256', $token),
             'expires_at' => date('Y-m-d H:i:s', time() + 86400)  // 24 orë
         ]);
 
         // Krijo linkun e verifikimit
-        $verifyLink = SITE_URL . '/views/Auth/Verify.php?code=' . $code;
+        $verifyLink = SITE_URL . '/auth/verify_email.php?token=' . urlencode($token);
 
-        // Në zhvillim, ruaje kodin në sesion për testim
+        // Në zhvillim, ruaje linkun në sesion për testim
         if (DEBUG_MODE) {
             $_SESSION['debug_verify_link'] = $verifyLink;
         }
@@ -165,27 +169,27 @@ class User
      * @param string $code
      * @return array
      */
-    public function verifyEmail(string $code): array
+    public function verifyEmail(string $token): array
     {
-        // Gjej kodin në databazë
+        // Gjej tokenin në databazë
         $verification = $this->db->fetchOne(
-            "SELECT * FROM verification_codes
-             WHERE code = ? AND type = 'email_verify' AND expires_at > NOW() AND used_at IS NULL",
-            [$code]
+            "SELECT * FROM email_verifications
+             WHERE token = ? AND expires_at > NOW()",
+            [hash('sha256', $token)]
         );
 
         if (!$verification) {
-            return ['success' => false, 'message' => 'Kodi i verifikimit është i pavlefshëm ose ka skaduar'];
+            return ['success' => false, 'message' => 'Linku i verifikimit është i pavlefshëm ose ka skaduar'];
         }
 
         try {
             $this->db->beginTransaction();
 
             // Përditëso përdoruesin si të verifikuar
-            $this->db->update('users', ['is_verified' => true], 'id = ?', [$verification['user_id']]);
+            $this->db->update('users', ['email_verified' => 1], 'id = ?', [$verification['user_id']]);
 
-            // Shëno kodin si të përdorur
-            $this->db->update('verification_codes', ['used_at' => date('Y-m-d H:i:s')], 'id = ?', [$verification['id']]);
+            // Fshi tokenin pas verifikimit
+            $this->db->delete('email_verifications', 'user_id = ?', [$verification['user_id']]);
 
             $this->db->commit();
 
@@ -251,7 +255,7 @@ class User
         }
 
         // Kontrollo nëse email është verifikuar
-        if (!$user['is_verified']) {
+        if (!$user['email_verified']) {
             return ['success' => false, 'message' => 'Ju lutem verifikoni email-in para se të logoheni'];
         }
 
