@@ -10,6 +10,8 @@
  * - Ndrysho fjalëkalimin
  */
 
+require_once __DIR__ . '/../../includes/init.php';
+
 $pageTitle = 'Profili Im - ' . SITE_NAME;
 require_once __DIR__ . '/../partials/header.php';
 

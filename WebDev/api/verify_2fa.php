@@ -114,8 +114,8 @@ function verify2FACode($db, $userId, $remember) {
     // Përditëso last_login
     $db->update('users', ['last_login' => date('Y-m-d H:i:s')], 'id = ?', [$user['id']]);
 
-    // Kontrollo nëse ka redirect të ruajtur
-    $redirect = $_SESSION['redirect_after_login'] ?? SITE_URL;
+    // Kontrollo nëse ka redirect të ruajtur (rrugë relative ndaj origin-it)
+    $redirect = $_SESSION['redirect_after_login'] ?? '/';
     unset($_SESSION['redirect_after_login']);
 
     echo json_encode([

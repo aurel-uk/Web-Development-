@@ -35,3 +35,7 @@ node_modules/
 # Temporary files
 *.tmp
 *.temp
+
+# Local test artifacts (curl cookie jars, saved page snapshots)
+cookies.txt
+session.txt

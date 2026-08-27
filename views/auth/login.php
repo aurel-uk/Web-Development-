@@ -11,6 +11,8 @@
  * - Ridrejtimi sipas rolit (user/admin)
  */
 
+require_once __DIR__ . '/../../includes/init.php';
+
 // Vendos titullin
 $pageTitle = 'Hyr - ' . SITE_NAME;
 

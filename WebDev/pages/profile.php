@@ -255,7 +255,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             try {
-                const response = await fetch('<?= SITE_URL ?>/api/profile.php', {
+                const response = await fetch('/api/profile.php', {
                     method: 'POST',
                     body: formData
                 });
@@ -290,7 +290,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const formData = new FormData(this);
 
             try {
-                const response = await fetch('<?= SITE_URL ?>/api/profile.php', {
+                const response = await fetch('/api/profile.php', {
                     method: 'POST',
                     body: formData
                 });
@@ -322,7 +322,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 formData.append('action', 'toggle_2fa');
                 formData.append('enabled', enabled ? '1' : '0');
 
-                const response = await fetch('<?= SITE_URL ?>/api/profile.php', {
+                const response = await fetch('/api/profile.php', {
                     method: 'POST',
                     body: formData
                 });

@@ -6,6 +6,8 @@
  * Shfaq statistika të përgjithshme dhe aksione të shpejta.
  */
 
+require_once __DIR__ . '/../../includes/init.php';
+
 $pageTitle = 'Admin Dashboard - ' . SITE_NAME;
 require_once __DIR__ . '/../partials/header.php';
 

@@ -5,6 +5,8 @@
  * Formë kontakti për vizitorët.
  */
 
+require_once __DIR__ . '/../includes/init.php';
+
 $pageTitle = 'Na Kontaktoni - ' . SITE_NAME;
 require_once __DIR__ . '/partials/header.php';
 

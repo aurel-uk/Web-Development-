@@ -88,6 +88,14 @@ class Database
      */
     public function query(string $sql, array $params = []): PDOStatement
     {
+        // PDO bind bool si string ('' / '1'), jo si integer 0/1 — MySQL strict mode
+        // e refuzon '' për kolona INT/TINYINT (p.sh. is_verified, is_active)
+        foreach ($params as $key => $value) {
+            if (is_bool($value)) {
+                $params[$key] = (int) $value;
+            }
+        }
+
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute($params);
         return $stmt;
