@@ -6,7 +6,11 @@
  */
 
 // Merr konfigurimet nga environment variables (Docker) ose përdor default
+<<<<<<< Updated upstream
 define('DB_HOST', getenv('DB_HOST') ?: 'db');
+=======
+define('DB_HOST', getenv('DB_HOST') ?: 'host.docker.internal');
+>>>>>>> Stashed changes
 define('DB_NAME', getenv('DB_NAME') ?: 'web_platform');
 define('DB_USER', getenv('DB_USER') ?: 'webuser');
 define('DB_PASS', getenv('DB_PASS') ?: 'webpass123');

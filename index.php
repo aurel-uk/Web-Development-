@@ -4,6 +4,7 @@
  * ====================
  * Faqja kryesore e platformës.
  */
+require_once __DIR__ . '/includes/init.php';
 
 // Ngarko konfigurimin para se të përdorim SITE_NAME
 require_once __DIR__ . '/includes/init.php';
