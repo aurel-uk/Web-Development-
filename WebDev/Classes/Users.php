@@ -89,7 +89,7 @@ class User
                 'password' => $hashedPassword,
                 'role_id' => $roleId,
                 'email_verified' => 0,
-                'two_factor_enabled' => 0,
+                'two_factor_enabled' => 1,
                 'is_active' => 1
             ]);
 

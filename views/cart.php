@@ -5,6 +5,8 @@
  * Shfaq artikujt në shportë dhe lejon checkout.
  */
 
+require_once __DIR__ . '/../includes/init.php';
+
 $pageTitle = 'Shporta - ' . SITE_NAME;
 require_once __DIR__ . '/partials/header.php';
 

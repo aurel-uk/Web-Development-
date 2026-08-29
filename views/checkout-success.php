@@ -5,6 +5,8 @@
  * Shfaqet pas pagesës së suksesshme.
  */
 
+require_once __DIR__ . '/../includes/init.php';
+
 $pageTitle = 'Porosia u Krye - ' . SITE_NAME;
 require_once __DIR__ . '/partials/header.php';
 

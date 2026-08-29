@@ -147,7 +147,7 @@ async function updateCartCounter() {
     if (!cartCountEl) return;
 
     try {
-        const response = await fetch(`${SITE_URL}/api/cart.php?action=count`);
+        const response = await fetch('/api/cart.php?action=count');
         const data = await response.json();
 
         if (data.success) {
@@ -248,7 +248,7 @@ async function getJSON(url) {
  */
 async function addToCart(productId, quantity = 1) {
     try {
-        const data = await postJSON(`${SITE_URL}/api/cart.php`, {
+        const data = await postJSON('/api/cart.php', {
             action: 'add',
             product_id: productId,
             quantity: quantity
@@ -270,7 +270,7 @@ async function addToCart(productId, quantity = 1) {
  */
 async function removeFromCart(productId) {
     try {
-        const data = await postJSON(`${SITE_URL}/api/cart.php`, {
+        const data = await postJSON('/api/cart.php', {
             action: 'remove',
             product_id: productId
         });
@@ -295,7 +295,7 @@ async function removeFromCart(productId) {
  */
 async function updateCartQuantity(productId, quantity) {
     try {
-        const data = await postJSON(`${SITE_URL}/api/cart.php`, {
+        const data = await postJSON('/api/cart.php', {
             action: 'update',
             product_id: productId,
             quantity: quantity

@@ -103,7 +103,7 @@ document.getElementById('resetForm').addEventListener('submit', async function(e
         const formData = new FormData(form);
         formData.append('action', 'reset_password');
 
-        const response = await fetch('<?= SITE_URL ?>/api/auth.php', {
+        const response = await fetch('/api/auth.php', {
             method: 'POST',
             body: formData
         });

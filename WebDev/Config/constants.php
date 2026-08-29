@@ -14,7 +14,31 @@ if (defined('SITE_NAME')) {
 // INFORMACIONE TË SAJTIT
 // ============================================
 define('SITE_NAME', 'Web Platform');
-define('SITE_URL', 'http://localhost:8080');
+
+// SITE_URL: nga APP_URL (Docker/.env), përndryshe zbulohet nga kërkesa aktuale.
+// I hardcoduar te 'localhost:8080' e thyente redirect-in (p.sh. te verify_2fa.php)
+// sapo aplikacioni aksesohej nga një host/portë tjetër nga default-i i Docker.
+if ($envUrl = getenv('APP_URL')) {
+    define('SITE_URL', rtrim($envUrl, '/'));
+} elseif (!empty($_SERVER['HTTP_HOST'])) {
+    // Prapa një proxy/tunnel (ngrok, Codespaces, nginx/Traefik, etj.) që bën TLS
+    // termination, PHP e sheh kërkesën si HTTP edhe kur shfletuesi është në HTTPS —
+    // atëherë X-Forwarded-Proto tregon protokollin e vërtetë. Pa këtë, SITE_URL dilte
+    // 'http://' ndërsa faqja ishte 'https://', dhe fetch() bllokohej si "mixed content"
+    // (butoni "spin"-te por asgjë nuk ndodhte, pa gabim të dukshëm).
+    $forwardedProto = strtolower(trim(explode(',', $_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '')[0]));
+    if ($forwardedProto === 'https' || $forwardedProto === 'http') {
+        $scheme = $forwardedProto;
+    } elseif ((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || ($_SERVER['SERVER_PORT'] ?? null) == 443) {
+        $scheme = 'https';
+    } else {
+        $scheme = 'http';
+    }
+    define('SITE_URL', $scheme . '://' . $_SERVER['HTTP_HOST']);
+} else {
+    define('SITE_URL', 'http://localhost:8080');
+}
+
 define('SITE_EMAIL', 'info@webplatform.com');
 
 // ============================================

@@ -6,6 +6,8 @@
  * Shfaq statistika dhe veprimet e shpejta.
  */
 
+require_once __DIR__ . '/../../includes/init.php';
+
 $pageTitle = 'Dashboard - ' . SITE_NAME;
 require_once __DIR__ . '/../partials/header.php';
 

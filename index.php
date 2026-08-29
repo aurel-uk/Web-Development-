@@ -6,6 +6,9 @@
  */
 require_once __DIR__ . '/includes/init.php';
 
+// Ngarko konfigurimin para se të përdorim SITE_NAME
+require_once __DIR__ . '/includes/init.php';
+
 $pageTitle = SITE_NAME . ' - Platformë Web E-Commerce';
 require_once __DIR__ . '/views/partials/header.php';
 

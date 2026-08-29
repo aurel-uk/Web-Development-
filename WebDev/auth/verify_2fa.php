@@ -238,7 +238,7 @@ document.addEventListener('DOMContentLoaded', function() {
             formData.append('csrf_token', document.querySelector('[name="csrf_token"]').value);
             formData.append('code', code);
 
-            const response = await fetch('<?= SITE_URL ?>/api/verify_2fa.php', {
+            const response = await fetch('/api/verify_2fa.php', {
                 method: 'POST',
                 body: formData
             });
@@ -251,7 +251,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 alertBox.classList.remove('d-none');
 
                 setTimeout(function() {
-                    window.location.href = data.redirect || '<?= SITE_URL ?>';
+                    window.location.href = data.redirect || '/';
                 }, 1000);
             } else {
                 alertBox.className = 'alert alert-danger';
@@ -285,7 +285,7 @@ document.addEventListener('DOMContentLoaded', function() {
             formData.append('csrf_token', document.querySelector('[name="csrf_token"]').value);
             formData.append('action', 'resend');
 
-            const response = await fetch('<?= SITE_URL ?>/api/verify_2fa.php', {
+            const response = await fetch('/api/verify_2fa.php', {
                 method: 'POST',
                 body: formData
             });

@@ -155,7 +155,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         try {
             const formData = new FormData(form);
-            const response = await fetch('<?= SITE_URL ?>/api/contact.php', {
+            const response = await fetch('/api/contact.php', {
                 method: 'POST',
                 body: formData
             });

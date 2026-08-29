@@ -107,7 +107,7 @@ if (!$user['is_active']) {
 }
 
 // Kontrollo nëse 2FA është aktivizuar
-$twoFactorEnabled = isset($user['two_factor_enabled']) ? (bool)$user['two_factor_enabled'] : false;
+$twoFactorEnabled = isset($user['two_factor_enabled']) ? (bool)$user['two_factor_enabled'] : true;
 
 if ($twoFactorEnabled) {
     // Gjenero kod 6-shifror
@@ -138,7 +138,10 @@ if ($twoFactorEnabled) {
         'success' => true,
         'requires_2fa' => true,
         'message' => 'Kodi i verifikimit u dërgua në email-in tuaj.',
-        'redirect' => SITE_URL . '/auth/verify_2fa.php'
+        // Rrugë relative ndaj origin-it, jo SITE_URL — kjo faqe dhe api/login.php mund
+        // të shohin skema/host të ndryshme prapa një proxy, dhe redirect absolut mund
+        // të çonte në një URL të gabuar (login-i "ngec" pa gabim të dukshëm).
+        'redirect' => '/auth/verify_2fa.php'
     ]);
     exit;
 }
@@ -175,8 +178,8 @@ function completeLogin($user, $remember, $db) {
     // Përditëso last_login
     $db->update('users', ['last_login' => date('Y-m-d H:i:s')], 'id = ?', [$user['id']]);
 
-    // Kontrollo nëse ka redirect të ruajtur
-    $redirect = $_SESSION['redirect_after_login'] ?? SITE_URL;
+    // Kontrollo nëse ka redirect të ruajtur (rrugë relative ndaj origin-it)
+    $redirect = $_SESSION['redirect_after_login'] ?? '/';
     unset($_SESSION['redirect_after_login']);
 
     echo json_encode([

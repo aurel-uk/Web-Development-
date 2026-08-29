@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS users (
     phone VARCHAR(20),
     role_id INT DEFAULT 1,
     email_verified BOOLEAN DEFAULT FALSE,
-    two_factor_enabled BOOLEAN DEFAULT FALSE,
+    two_factor_enabled BOOLEAN DEFAULT TRUE,
     is_active BOOLEAN DEFAULT TRUE,
     avatar VARCHAR(255) DEFAULT 'default.png',
     last_login TIMESTAMP NULL,
@@ -264,18 +264,18 @@ INSERT INTO categories (name, slug, description) VALUES
 ON DUPLICATE KEY UPDATE name = VALUES(name);
 
 -- Produkte shembull
-INSERT INTO products (category_id, name, slug, description, price, sale_price, stock, is_active) VALUES
-(1, 'Smartphone XYZ Pro', 'smartphone-xyz-pro', 'Telefon i mençur me ekran 6.7 inch AMOLED, 128GB', 349.99, 299.99, 50, TRUE),
-(1, 'Laptop Pro 15', 'laptop-pro-15', 'Laptop profesional 15.6 inch, Intel i7, 16GB RAM, 512GB SSD', 899.99, NULL, 20, TRUE),
-(1, 'Kufje Wireless', 'kufje-wireless', 'Kufje bluetooth me noise cancellation', 79.99, 59.99, 100, TRUE),
-(2, 'Xhaketë Dimri Premium', 'xhakete-dimri-premium', 'Xhaketë e ngrohtë waterproof për dimër', 129.99, 99.99, 75, TRUE),
-(2, 'Bluza Sportive', 'bluza-sportive', 'Bluza e lehtë për stërvitje dhe vrapim', 39.99, NULL, 150, TRUE),
-(3, 'Tavolinë Kafeje Moderne', 'tavoline-kafeje-moderne', 'Tavolinë elegante për dhomën e ndenjës', 189.99, 149.99, 30, TRUE),
-(3, 'Llambë LED Smart', 'llambe-led-smart', 'Llambë e kontrolluar me WiFi dhe app', 29.99, NULL, 200, TRUE),
-(4, 'Top Futbolli Pro', 'top-futbolli-pro', 'Top futbolli profesional FIFA approved', 49.99, 39.99, 100, TRUE),
-(4, 'Pesha Fitness Set', 'pesha-fitness-set', 'Set peshash 2-10kg për stërvitje në shtëpi', 89.99, NULL, 40, TRUE),
-(5, 'Koleksion Libra Programimi', 'koleksion-libra-programimi', 'Set me 5 libra për të mësuar programim', 59.99, 49.99, 60, TRUE)
-ON DUPLICATE KEY UPDATE name = VALUES(name);
+INSERT INTO products (category_id, name, slug, description, price, sale_price, stock, is_active, image) VALUES
+(1, 'Smartphone XYZ Pro', 'smartphone-xyz-pro', 'Telefon i mençur me ekran 6.7 inch AMOLED, 128GB', 349.99, 299.99, 50, TRUE, 'smartphone-xyz-pro.jpg'),
+(1, 'Laptop Pro 15', 'laptop-pro-15', 'Laptop profesional 15.6 inch, Intel i7, 16GB RAM, 512GB SSD', 899.99, NULL, 20, TRUE, 'laptop-pro-15.jpg'),
+(1, 'Kufje Wireless', 'kufje-wireless', 'Kufje bluetooth me noise cancellation', 79.99, 59.99, 100, TRUE, 'kufje-wireless.jpg'),
+(2, 'Xhaketë Dimri Premium', 'xhakete-dimri-premium', 'Xhaketë e ngrohtë waterproof për dimër', 129.99, 99.99, 75, TRUE, 'xhakete-dimri-premium.jpg'),
+(2, 'Bluza Sportive', 'bluza-sportive', 'Bluza e lehtë për stërvitje dhe vrapim', 39.99, NULL, 150, TRUE, 'bluza-sportive.jpg'),
+(3, 'Tavolinë Kafeje Moderne', 'tavoline-kafeje-moderne', 'Tavolinë elegante për dhomën e ndenjës', 189.99, 149.99, 30, TRUE, 'tavoline-kafeje-moderne.jpg'),
+(3, 'Llambë LED Smart', 'llambe-led-smart', 'Llambë e kontrolluar me WiFi dhe app', 29.99, NULL, 200, TRUE, 'llambe-led-smart.jpg'),
+(4, 'Top Futbolli Pro', 'top-futbolli-pro', 'Top futbolli profesional FIFA approved', 49.99, 39.99, 100, TRUE, 'top-futbolli-pro.jpg'),
+(4, 'Pesha Fitness Set', 'pesha-fitness-set', 'Set peshash 2-10kg për stërvitje në shtëpi', 89.99, NULL, 40, TRUE, 'pesha-fitness-set.jpg'),
+(5, 'Koleksion Libra Programimi', 'koleksion-libra-programimi', 'Set me 5 libra për të mësuar programim', 59.99, 49.99, 60, TRUE, 'koleksion-libra-programimi.jpg')
+ON DUPLICATE KEY UPDATE name = VALUES(name), image = VALUES(image);
 
 -- Mesazh i parë log
 INSERT INTO user_logs (user_id, action, description, ip_address) VALUES

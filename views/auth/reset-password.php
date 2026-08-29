@@ -6,6 +6,8 @@
  * fjalëkalimin e ri.
  */
 
+require_once __DIR__ . '/../../includes/init.php';
+
 $pageTitle = 'Fjalëkalimi i Ri - ' . SITE_NAME;
 require_once __DIR__ . '/../partials/header.php';
 

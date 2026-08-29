@@ -5,6 +5,8 @@
  * Shfleton produktet me filtrim dhe kërkim.
  */
 
+require_once __DIR__ . '/../includes/init.php';
+
 $pageTitle = 'Produktet - ' . SITE_NAME;
 require_once __DIR__ . '/partials/header.php';
 

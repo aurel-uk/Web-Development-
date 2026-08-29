@@ -5,6 +5,8 @@
  * Kur përdoruesi klikon linkun e verifikimit, vjen këtu.
  */
 
+require_once __DIR__ . '/../../includes/init.php';
+
 $pageTitle = 'Verifiko Email - ' . SITE_NAME;
 require_once __DIR__ . '/../partials/header.php';
 

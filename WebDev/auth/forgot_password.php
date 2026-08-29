@@ -84,7 +84,7 @@ document.getElementById('forgotForm').addEventListener('submit', async function(
         const formData = new FormData(form);
         formData.append('action', 'forgot_password');
 
-        const response = await fetch('<?= SITE_URL ?>/api/auth.php', {
+        const response = await fetch('/api/auth.php', {
             method: 'POST',
             body: formData
         });

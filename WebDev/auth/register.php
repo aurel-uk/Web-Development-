@@ -208,7 +208,7 @@ document.addEventListener('DOMContentLoaded', function() {
         try {
             const formData = new FormData(form);
             const csrfToken = formData.get('csrf_token');
-            const response = await fetch('<?= SITE_URL ?>/api/register.php', {
+            const response = await fetch('/api/register.php', {
                 method: 'POST',
                 headers: {
                     'X-CSRF-Token': csrfToken || ''
