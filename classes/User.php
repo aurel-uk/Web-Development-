@@ -291,7 +291,7 @@ class User
         return [
             'success' => true,
             'message' => 'U loguat me sukses!',
-            'redirect' => $user['role_name'] === 'admin' ? 'views/admin/dashboard.php' : 'views/user/dashboard.php'
+            'redirect' => '/'
         ];
     }
 

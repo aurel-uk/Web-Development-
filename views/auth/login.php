@@ -19,9 +19,9 @@ $pageTitle = 'Hyr - ' . SITE_NAME;
 // Përfshi header-in
 require_once __DIR__ . '/../partials/header.php';
 
-// Nëse përdoruesi është tashmë i loguar, ridrejto
+// Nëse përdoruesi është tashmë i loguar, ridrejto në homepage
 if (isLoggedIn()) {
-    redirect(isAdmin() ? 'views/admin/dashboard.php' : 'views/user/dashboard.php');
+    redirect('');
 }
 
 // Inicializo variablat
