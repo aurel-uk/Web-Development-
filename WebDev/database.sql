@@ -244,9 +244,14 @@ ON DUPLICATE KEY UPDATE name = VALUES(name);
 
 -- Produkte shembull
 INSERT INTO products (category_id, name, slug, description, price, stock, is_active) VALUES
-(1, 'Smartphone XYZ', 'smartphone-xyz', 'Telefon i mençur me ekran 6.5 inch', 299.99, 50, TRUE),
-(1, 'Laptop Pro 15', 'laptop-pro-15', 'Laptop profesional për punë dhe gaming', 899.99, 20, TRUE),
-(2, 'Xhaketë Dimri', 'xhakete-dimri', 'Xhaketë e ngrohtë për dimër', 79.99, 100, TRUE),
-(3, 'Tavolinë Kafeje', 'tavoline-kafeje', 'Tavolinë moderne për dhomën e ndenjës', 149.99, 30, TRUE),
-(4, 'Topa Futbolli', 'topa-futbolli', 'Top futbolli profesional', 29.99, 200, TRUE)
-ON DUPLICATE KEY UPDATE name = VALUES(name);
+(1, 'Smartphone Pro Max', 'smartphone-pro-max', 'Telefon inteligjent me ekran 6.7 inç AMOLED, 128GB memorje, kamera e avancuar 48MP dhe bateri 5000mAh', 299.99, 50, TRUE),
+(1, 'Laptop Pro 15 inç', 'laptop-pro-15', 'Laptop profesional me procesor Intel i7, 16GB RAM, 512GB SSD dhe ekran FHD për punë dhe gaming', 899.99, 20, TRUE),
+(1, 'Kufje Wireless', 'kufje-wireless', 'Kufje Bluetooth me anulim të zhurmës, baterisë 30 orësh dhe mikrofon i qartë për biseda', 59.99, 150, TRUE),
+(2, 'Xhaketë Dimri Premium', 'xhakete-dimri-premium', 'Xhaketë e ngrohtë dhe impermeabile për dimër, me kapuç të lëvizshëm dhe xhepa të thellë', 79.99, 100, TRUE),
+(2, 'Këpucë Sportive', 'kepuce-sportive', 'Këpucë lehtësinë dhe komode për sport dhe veprimtari të përditshme me ngjitje të sigurt', 45.99, 200, TRUE),
+(3, 'Tavolë Kafe Moderne', 'tavole-kafe-moderne', 'Tavolë moderne e bërë nga druri i ngurta me dizajn kontemporar për dhomën e ndenjës', 149.99, 30, TRUE),
+(3, 'Karrige Zyre', 'karrige-zyre', 'Karrige ergonomike për zyrë me mbështetje të lehtë dhe lartësi të rregullueshme', 89.99, 45, TRUE),
+(4, 'Top Futbolli Premium', 'top-futbolli-premium', 'Top futbolli profesional me teksturë të përsosur dhe rezistencë të lartë ndaj prerjeve', 29.99, 200, TRUE),
+(4, 'Raketë Tenisi', 'rakete-tenisi', 'Raketë tenisi e lehtë me grua të fortë dhe dorezë ergonomike për lojtarët e përkulur', 34.99, 80, TRUE),
+(5, 'Libri: Eksplorimi i Teknologjisë', 'libri-eksplorimi-teknologjise', 'Libër informues për historinë dhe të ardhmen e teknologjisë në shoqërinë moderne', 24.99, 60, TRUE)
+ON DUPLICATE KEY UPDATE name = VALUES(name), description = VALUES(description);

@@ -18,6 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 
 // Verifiko CSRF (lejon tokenin nga formë ose nga headeri X-CSRF-Token)
 $csrfToken = $_POST['csrf_token'] ?? $_SERVER['HTTP_X_CSRF_TOKEN'] ?? '';
+error_log("CSRF DEBUG: Received token: '$csrfToken', Session token: '" . ($_SESSION['csrf_token'] ?? 'NOT SET') . "'");
 if ($csrfToken === '' || !verifyCSRFToken($csrfToken)) {
     http_response_code(403);
     echo json_encode(['success' => false, 'message' => 'Token i pavlefshëm. Rifresko faqen dhe provo përsëri.']);
