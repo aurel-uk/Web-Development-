@@ -868,7 +868,7 @@ function uploadImage(array $file, string $directory = ''): array
 
     // Krijo dosjen nëse nuk ekziston
 
-    $uploadPath = UPLOAD_PATH . ($directory ? $directory . '/' : '');
+    $uploadPath = UPLOADS_PATH . '/' . ($directory ? $directory . '/' : '');
 
     if (!is_dir($uploadPath)) {
 
@@ -926,7 +926,7 @@ function deleteImage(string $filename): bool
 
  
 
-    $filepath = UPLOAD_PATH . $filename;
+    $filepath = UPLOADS_PATH . '/' . $filename;
 
     if (file_exists($filepath)) {
 

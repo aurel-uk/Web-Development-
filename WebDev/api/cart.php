@@ -43,6 +43,13 @@ $userId = getCurrentUserId();
 $input = json_decode(file_get_contents('php://input'), true) ?? $_POST;
 $action = $input['action'] ?? '';
 
+// Mbrojtje CSRF për veprimet që ndryshojnë shportën
+if (!verifyCSRFToken($input['csrf_token'] ?? '')) {
+    http_response_code(403);
+    echo json_encode(['success' => false, 'message' => 'Token CSRF i pavlefshëm ose mungon.']);
+    exit;
+}
+
 switch ($action) {
     case 'add':
         $productId = (int)($input['product_id'] ?? 0);

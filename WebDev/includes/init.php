@@ -26,10 +26,15 @@ require_once $configPath . '/constants.php';
 require_once $configPath . '/database.php';
 
 // Autoload klasat
+// Disa skedarë në Classes/ kanë emër në shumës (Products.php, Users.php)
+// ndërsa klasa brenda tyre është në njëjës (Product, User), prandaj provojmë
+// edhe emrin e skedarit me 's' shtesë.
 spl_autoload_register(function ($className) {
     $paths = [
         __DIR__ . '/../Classes/' . $className . '.php',
+        __DIR__ . '/../Classes/' . $className . 's.php',
         __DIR__ . '/../classes/' . $className . '.php',
+        __DIR__ . '/../classes/' . $className . 's.php',
     ];
     foreach ($paths as $classFile) {
         if (file_exists($classFile)) {

@@ -2,24 +2,29 @@
 /**
  * API ENDPOINTS - POROSITË
  * ========================
- * Menaxhon porositë e klientëve.
+ * Endpoint standalone (jo vetëm përmes routerit api/index.php) që përdoret
+ * drejtpërdrejt nga paneli i adminit (admin/orders.php -> POST /api/orders.php)
+ * dhe nga pages/orders.php (anulim porosie nga vetë klienti).
  *
- * Endpoints:
- * - GET /api/orders - Lista e porosive të përdoruesit
- * - GET /api/orders/{id} - Detajet e porosisë
- * - POST /api/orders - Krijo porosi të re
- * - GET /api/orders/all - Të gjitha porositë (admin)
- * - PUT /api/orders/{id}/status - Ndrysho statusin (admin)
+ * Veprime (action nga $_GET/$_POST):
+ * - GET  ?action=list          - Porositë e përdoruesit të loguar
+ * - GET  ?action=single&id=    - Detajet e një porosie
+ * - GET  ?action=all           - Të gjitha porositë (admin)
+ * - GET  ?action=stats         - Statistika porosish (admin)
+ * - POST action=update_status  - Ndrysho statusin e porosisë (admin)
+ * - POST action=cancel         - Anulo porosinë (vetë klienti, vetëm nëse 'pending')
  */
 
-$db = Database::getInstance();
-$method = $_SERVER['REQUEST_METHOD'];
+require_once __DIR__ . '/../includes/init.php';
+require_once __DIR__ . '/../includes/api_helpers.php';
 
-// Nëse action është numër, atëherë është ID
-if (is_numeric($action)) {
-    $id = (int)$action;
-    $action = 'single';
-}
+header('Content-Type: application/json; charset=utf-8');
+
+$jsonBody = getJsonInput();
+$action = $_GET['action'] ?? $_POST['action'] ?? $jsonBody['action'] ?? '';
+$method = $_SERVER['REQUEST_METHOD'];
+$db = Database::getInstance();
+$product = new Product();
 
 switch ($action) {
     // ============================================
@@ -31,7 +36,7 @@ switch ($action) {
         $userId = requireAuth();
 
         $page = (int)($_GET['page'] ?? 1);
-        $perPage = (int)($_GET['per_page'] ?? 10);
+        $perPage = clampPerPage((int)($_GET['per_page'] ?? 10));
         $offset = ($page - 1) * $perPage;
 
         $orders = $db->fetchAll(
@@ -49,7 +54,7 @@ switch ($action) {
             'data' => $orders,
             'pagination' => [
                 'current_page' => $page,
-                'total_pages' => ceil($total / $perPage),
+                'total_pages' => (int) ceil($total / $perPage),
                 'total_items' => $total,
                 'per_page' => $perPage
             ]
@@ -63,14 +68,14 @@ switch ($action) {
         requireMethod('GET');
         $userId = requireAuth();
 
-        $order = $db->fetchOne(
+        $orderId = (int)($_GET['id'] ?? 0);
+        $order = $orderId ? $db->fetchOne(
             "SELECT * FROM orders WHERE id = ? AND user_id = ?",
-            [$id, $userId]
-        );
+            [$orderId, $userId]
+        ) : null;
 
-        // Nëse është admin, lejo akses te çdo porosi
-        if (!$order && isAdmin()) {
-            $order = $db->fetchOne("SELECT * FROM orders WHERE id = ?", [$id]);
+        if (!$order && $orderId && isAdmin()) {
+            $order = $db->fetchOne("SELECT * FROM orders WHERE id = ?", [$orderId]);
         }
 
         if (!$order) {
@@ -80,16 +85,13 @@ switch ($action) {
             ], 404);
         }
 
-        // Merr artikujt e porosisë
-        $items = $db->fetchAll(
+        $order['items'] = $db->fetchAll(
             "SELECT oi.*, p.name, p.image
              FROM order_items oi
              JOIN products p ON oi.product_id = p.id
              WHERE oi.order_id = ?",
-            [$id]
+            [$orderId]
         );
-
-        $order['items'] = $items;
 
         jsonResponse([
             'success' => true,
@@ -98,105 +100,48 @@ switch ($action) {
         break;
 
     // ============================================
-    // CREATE ORDER
+    // CANCEL ORDER (vetë klienti)
     // ============================================
-    case 'create':
+    case 'cancel':
         requireMethod('POST');
         $userId = requireAuth();
+        requireCsrf();
 
         $data = getJsonInput();
+        $orderId = (int)($_POST['order_id'] ?? $data['order_id'] ?? 0);
 
-        // Merr artikujt nga shporta
-        $cartItems = $db->fetchAll(
-            "SELECT c.*, p.name, p.price, p.stock
-             FROM cart c
-             JOIN products p ON c.product_id = p.id
-             WHERE c.user_id = ?",
-            [$userId]
+        if (!$orderId) {
+            jsonResponse([
+                'success' => false,
+                'message' => 'ID e porosisë mungon'
+            ], 400);
+        }
+
+        $order = $db->fetchOne(
+            "SELECT * FROM orders WHERE id = ? AND user_id = ?",
+            [$orderId, $userId]
         );
 
-        if (empty($cartItems)) {
+        if (!$order) {
             jsonResponse([
                 'success' => false,
-                'message' => 'Shporta është bosh'
+                'message' => 'Porosia nuk u gjet'
+            ], 404);
+        }
+
+        if ($order['status'] !== 'pending') {
+            jsonResponse([
+                'success' => false,
+                'message' => 'Vetëm porositë në pritje mund të anulohen'
             ], 400);
         }
 
-        // Valido të dhënat e dërgesës
-        $shippingAddress = sanitize($data['shipping_address'] ?? '');
-        $shippingCity = sanitize($data['shipping_city'] ?? '');
-        $phone = sanitize($data['phone'] ?? '');
+        $result = $product->updateOrderStatus($orderId, 'cancelled');
 
-        if (empty($shippingAddress) || empty($shippingCity) || empty($phone)) {
-            jsonResponse([
-                'success' => false,
-                'message' => 'Adresa, qyteti dhe telefoni janë të detyrueshëm'
-            ], 400);
-        }
-
-        // Kontrollo stock dhe llogarit totalin
-        $total = 0;
-        foreach ($cartItems as $item) {
-            if ($item['quantity'] > $item['stock']) {
-                jsonResponse([
-                    'success' => false,
-                    'message' => "Stock i pamjaftueshëm për: {$item['name']}"
-                ], 400);
-            }
-            $total += $item['price'] * $item['quantity'];
-        }
-
-        try {
-            $db->beginTransaction();
-
-            // Krijo porosinë
-            $orderId = $db->insert('orders', [
-                'user_id' => $userId,
-                'total' => $total,
-                'status' => 'pending',
-                'shipping_address' => $shippingAddress,
-                'shipping_city' => $shippingCity,
-                'phone' => $phone,
-                'notes' => sanitize($data['notes'] ?? '')
-            ]);
-
-            // Shto artikujt e porosisë
-            foreach ($cartItems as $item) {
-                $db->insert('order_items', [
-                    'order_id' => $orderId,
-                    'product_id' => $item['product_id'],
-                    'quantity' => $item['quantity'],
-                    'price' => $item['price']
-                ]);
-
-                // Ul stock-un
-                $db->query(
-                    "UPDATE products SET stock = stock - ? WHERE id = ?",
-                    [$item['quantity'], $item['product_id']]
-                );
-            }
-
-            // Zbraz shportën
-            $db->delete('cart', 'user_id = ?', [$userId]);
-
-            $db->commit();
-
-            logUserAction($userId, 'order_created', "Porosia #{$orderId} u krijua");
-
-            jsonResponse([
-                'success' => true,
-                'message' => 'Porosia u krijua me sukses',
-                'order_id' => $orderId,
-                'total' => $total
-            ], 201);
-
-        } catch (Exception $e) {
-            $db->rollback();
-            jsonResponse([
-                'success' => false,
-                'message' => 'Ndodhi një gabim gjatë krijimit të porosisë'
-            ], 500);
-        }
+        jsonResponse([
+            'success' => $result['success'],
+            'message' => $result['message']
+        ], $result['success'] ? 200 : 400);
         break;
 
     // ============================================
@@ -207,7 +152,7 @@ switch ($action) {
         requireAdmin();
 
         $page = (int)($_GET['page'] ?? 1);
-        $perPage = (int)($_GET['per_page'] ?? 10);
+        $perPage = clampPerPage((int)($_GET['per_page'] ?? 10));
         $status = $_GET['status'] ?? '';
         $offset = ($page - 1) * $perPage;
 
@@ -236,7 +181,7 @@ switch ($action) {
             'data' => $orders,
             'pagination' => [
                 'current_page' => $page,
-                'total_pages' => ceil($total / $perPage),
+                'total_pages' => (int) ceil($total / $perPage),
                 'total_items' => $total,
                 'per_page' => $perPage
             ]
@@ -246,27 +191,19 @@ switch ($action) {
     // ============================================
     // UPDATE ORDER STATUS (Admin)
     // ============================================
-    case 'status':
-        requireMethod('PUT');
+    case 'update_status':
+        requireMethod('POST');
         requireAdmin();
+        requireCsrf();
 
         $data = getJsonInput();
-        $orderId = (int)($id ?? $data['order_id'] ?? 0);
-        $status = $data['status'] ?? '';
-
-        $validStatuses = ['pending', 'processing', 'shipped', 'delivered', 'cancelled'];
+        $orderId = (int)($_POST['order_id'] ?? $data['order_id'] ?? 0);
+        $status = $_POST['status'] ?? $data['status'] ?? '';
 
         if (!$orderId) {
             jsonResponse([
                 'success' => false,
                 'message' => 'ID e porosisë mungon'
-            ], 400);
-        }
-
-        if (!in_array($status, $validStatuses)) {
-            jsonResponse([
-                'success' => false,
-                'message' => 'Status i pavlefshëm. Statuset e lejuara: ' . implode(', ', $validStatuses)
             ], 400);
         }
 
@@ -279,14 +216,12 @@ switch ($action) {
             ], 404);
         }
 
-        $db->update('orders', ['status' => $status], 'id = ?', [$orderId]);
-
-        logUserAction(getCurrentUserId(), 'order_status_update', "Statusi i porosisë #{$orderId} u ndryshua në {$status}");
+        $result = $product->updateOrderStatus($orderId, $status);
 
         jsonResponse([
-            'success' => true,
-            'message' => 'Statusi u përditësua me sukses'
-        ]);
+            'success' => $result['success'],
+            'message' => $result['message']
+        ], $result['success'] ? 200 : 400);
         break;
 
     // ============================================
@@ -304,7 +239,7 @@ switch ($action) {
             'delivered' => $db->count('orders', "status = 'delivered'"),
             'cancelled' => $db->count('orders', "status = 'cancelled'"),
             'total_revenue' => $db->fetchOne(
-                "SELECT COALESCE(SUM(total), 0) as total FROM orders WHERE status != 'cancelled'"
+                "SELECT COALESCE(SUM(total_amount), 0) as total FROM orders WHERE status != 'cancelled'"
             )['total']
         ];
 
