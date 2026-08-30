@@ -36,7 +36,7 @@ $pageTitle = $pageTitle ?? SITE_NAME;
         <?= $extraCSS ?>
     <?php endif; ?>
 </head>
-<body data-site-url="<?= SITE_URL ?>" data-api-url="<?= SITE_URL ?>/api">
+<body data-site-url="<?= SITE_URL ?>" data-api-url="<?= SITE_URL ?>/api" data-csrf-token="<?= generateCSRFToken() ?>">
     <!-- NAVBAR -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top">
         <div class="container">

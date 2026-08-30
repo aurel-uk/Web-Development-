@@ -107,11 +107,17 @@ try {
             'price' => $price
         ]);
 
-        // Zvogëlo stokun
-        $db->query(
-            "UPDATE products SET stock = stock - ? WHERE id = ?",
-            [$item['quantity'], $item['product_id']]
+        // Zvogëlo stokun vetëm nëse ka ende mjaftueshëm (mbron nga race condition
+        // mes kontrollit të stokut më sipër dhe këtij UPDATE-i, p.sh. dy checkout
+        // të njëkohshëm për të njëjtin produkt)
+        $stockUpdate = $db->query(
+            "UPDATE products SET stock = stock - ? WHERE id = ? AND stock >= ?",
+            [$item['quantity'], $item['product_id'], $item['quantity']]
         );
+
+        if ($stockUpdate->rowCount() === 0) {
+            throw new Exception("Stok i pamjaftueshëm për '{$item['name']}'.");
+        }
     }
 
     // Pastro shportën

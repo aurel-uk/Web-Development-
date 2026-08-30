@@ -76,12 +76,15 @@ if (isLoggedIn()) {
                             <div class="input-group">
                                 <span class="input-group-text"><i class="bi bi-lock"></i></span>
                                 <input type="password" class="form-control" id="password" name="password"
-                                       placeholder="Minimum 8 karaktere" required minlength="8">
+                                       placeholder="Minimum 8 karaktere" required minlength="8"
+                                       pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}"
+                                       title="Të paktën 8 karaktere, me 1 shkronjë të madhe, 1 të vogël dhe 1 numër">
                                 <button class="btn btn-outline-secondary password-toggle" type="button" onclick="togglePassword('password', this)">
                                     <i class="bi bi-eye"></i>
                                 </button>
                             </div>
-                            <div class="invalid-feedback">Fjalëkalimi duhet të ketë të paktën 8 karaktere.</div>
+                            <div class="form-text">Të paktën 8 karaktere, me 1 shkronjë të madhe, 1 të vogël dhe 1 numër.</div>
+                            <div class="invalid-feedback">Fjalëkalimi duhet të ketë të paktën 8 karaktere, 1 shkronjë të madhe, 1 të vogël dhe 1 numër.</div>
                         </div>
 
                         <!-- Konfirmo Fjalëkalimin -->
@@ -188,6 +191,11 @@ document.addEventListener('DOMContentLoaded', function() {
         // Validim bazë
         if (!form.checkValidity()) {
             form.classList.add('was-validated');
+            const firstInvalid = form.querySelector(':invalid');
+            if (firstInvalid) {
+                firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                firstInvalid.focus();
+            }
             return;
         }
 
@@ -198,6 +206,8 @@ document.addEventListener('DOMContentLoaded', function() {
         if (password !== passwordConfirm) {
             document.getElementById('password_confirm').setCustomValidity('Fjalëkalimet nuk përputhen');
             form.classList.add('was-validated');
+            document.getElementById('password_confirm').scrollIntoView({ behavior: 'smooth', block: 'center' });
+            document.getElementById('password_confirm').focus();
             return;
         }
 
@@ -222,6 +232,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 alertBox.className = 'alert alert-success';
                 alertBox.innerHTML = '<i class="bi bi-check-circle me-2"></i>' + data.message;
                 alertBox.classList.remove('d-none');
+                alertBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
 
                 // Ridrejto pas 2 sekondash
                 setTimeout(function() {
@@ -231,6 +242,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 alertBox.className = 'alert alert-danger';
                 alertBox.innerHTML = '<i class="bi bi-x-circle me-2"></i>' + data.message;
                 alertBox.classList.remove('d-none');
+                alertBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = '<i class="bi bi-person-plus me-2"></i>Regjistrohu';
             }
@@ -239,6 +251,7 @@ document.addEventListener('DOMContentLoaded', function() {
             alertBox.className = 'alert alert-danger';
             alertBox.innerHTML = '<i class="bi bi-x-circle me-2"></i>Gabim në komunikim me serverin.';
             alertBox.classList.remove('d-none');
+            alertBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
             submitBtn.disabled = false;
             submitBtn.innerHTML = '<i class="bi bi-person-plus me-2"></i>Regjistrohu';
         }

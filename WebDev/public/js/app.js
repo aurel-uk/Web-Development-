@@ -216,13 +216,16 @@ function initQuantityButtons() {
  * Bën një kërkesë POST me JSON
  */
 async function postJSON(url, data) {
+    const csrfToken = document.body.dataset.csrfToken;
+    const payload = csrfToken ? { ...data, csrf_token: csrfToken } : data;
+
     const response = await fetch(url, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
             'X-Requested-With': 'XMLHttpRequest'
         },
-        body: JSON.stringify(data)
+        body: JSON.stringify(payload)
     });
     return response.json();
 }

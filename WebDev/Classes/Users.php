@@ -634,11 +634,11 @@ class User
 
         try {
             // Përditëso në databazë
-            $this->db->update('users', ['profile_image' => $upload['filename']], 'id = ?', [$userId]);
+            $this->db->update('users', ['avatar' => $upload['filename']], 'id = ?', [$userId]);
 
             // Fshi foton e vjetër
-            if ($user && $user['profile_image'] !== 'default.png') {
-                deleteImage($user['profile_image']);
+            if ($user && $user['avatar'] !== 'default.png') {
+                deleteImage($user['avatar']);
             }
 
             logUserAction($userId, 'profile_image_update', 'Foto e profilit u përditësua');
@@ -805,8 +805,8 @@ class User
             $user = $this->getUser($userId);
 
             // Fshi foton e profilit
-            if ($user && $user['profile_image'] !== 'default.png') {
-                deleteImage($user['profile_image']);
+            if ($user && $user['avatar'] !== 'default.png') {
+                deleteImage($user['avatar']);
             }
 
             $this->db->delete('users', 'id = ?', [$userId]);

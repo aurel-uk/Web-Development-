@@ -14,9 +14,18 @@
 // Inicializo
 require_once __DIR__ . '/../includes/init.php';
 
+require_once __DIR__ . '/../includes/api_helpers.php';
+
 // Vendos header për JSON
 header('Content-Type: application/json; charset=utf-8');
-header('Access-Control-Allow-Origin: *');
+
+// CORS: lejo vetëm origjinën e vetë sajtit, jo çdo domain (*)
+$allowedOrigin = defined('SITE_URL') ? SITE_URL : '';
+$requestOrigin = $_SERVER['HTTP_ORIGIN'] ?? '';
+if ($requestOrigin !== '' && $requestOrigin === $allowedOrigin) {
+    header('Access-Control-Allow-Origin: ' . $allowedOrigin);
+    header('Access-Control-Allow-Credentials: true');
+}
 header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type, Authorization');
 
@@ -24,67 +33,6 @@ header('Access-Control-Allow-Headers: Content-Type, Authorization');
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);
     exit();
-}
-
-/**
- * Funksion për të dërguar përgjigje JSON
- */
-function jsonResponse(array $data, int $statusCode = 200): void
-{
-    http_response_code($statusCode);
-    echo json_encode($data, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
-    exit();
-}
-
-/**
- * Funksion për të marrë të dhënat JSON nga request body
- */
-function getJsonInput(): array
-{
-    $input = file_get_contents('php://input');
-    $data = json_decode($input, true);
-    return $data ?? [];
-}
-
-/**
- * Funksion për të verifikuar metodën HTTP
- */
-function requireMethod(string $method): void
-{
-    if ($_SERVER['REQUEST_METHOD'] !== strtoupper($method)) {
-        jsonResponse([
-            'success' => false,
-            'message' => 'Metoda HTTP e gabuar. Pritej: ' . $method
-        ], 405);
-    }
-}
-
-/**
- * Funksion për të verifikuar autentikimin
- */
-function requireAuth(): int
-{
-    if (!isLoggedIn()) {
-        jsonResponse([
-            'success' => false,
-            'message' => 'Duhet të jeni i loguar'
-        ], 401);
-    }
-    return getCurrentUserId();
-}
-
-/**
- * Funksion për të verifikuar rolin admin
- */
-function requireAdmin(): void
-{
-    requireAuth();
-    if (!isAdmin()) {
-        jsonResponse([
-            'success' => false,
-            'message' => 'Akses i ndaluar'
-        ], 403);
-    }
 }
 
 // Merr rutën nga URL
