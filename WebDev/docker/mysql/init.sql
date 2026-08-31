@@ -3,6 +3,13 @@
 -- ============================================
 -- Ekzekutohet automatikisht kur MySQL container niset për herë të parë.
 
+-- Forco lidhjen si utf8mb4: pa këtë, docker-entrypoint.sh e ekzekuton këtë
+-- skedar me klientin mysql të parazgjedhur si latin1 (character_set_client),
+-- edhe pse serveri/databaza janë utf8mb4 — çdo shkronjë shqipe (ë, ç, etj.)
+-- e shkruar këtu si UTF-8 lexohet gabimisht si latin1 dhe ruhet e dyfishuar
+-- (p.sh. "ë" bëhet "Ã«" përgjithmonë në databazë, jo vetëm në ekran).
+SET NAMES utf8mb4;
+
 -- Përdor databazën (krijohet automatikisht nga docker-compose)
 USE web_platform;
 
